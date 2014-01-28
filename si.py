@@ -1,11 +1,17 @@
 import willie
 import os
 
-pathOngoing = "G:\Tools\Google Drive\Solium Infernum\Ongoing Games\\"
-pathFinished = "G:\Tools\Google Drive\Solium Infernum\Finished Games\\"
+pathOngoing = ""
+pathFinished = ""
+
+def configure(config):
+    config.interactive_add("si", "pathOngoing", "Location of ongoing game folders?")
+    config.interactive_add("si", "pathFinished", "Location of finished game folders?")
 
 @willie.module.commands('check')
 def check(bot, trigger):
+    pathOngoing = bot.config.si.pathongoing
+    pathFinished = bot.config.si.pathfinished
     if os.path.isdir(pathOngoing + trigger.group(2)):
         mainSave = ""
         turnFiles = {}
