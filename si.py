@@ -18,17 +18,21 @@ def setup(bot):
 def check(bot, trigger):
     if os.path.isdir(bot.config.si.pathongoing + trigger.group(2)):
         mainSave = ""
+        host = ""
         turnFiles = {}
+        # set these to false initially
+        # players{Emp, Moo}; for(p in players){ walk filesystem to check for turn }
         allPresent = True
         ready = True
         players = {}
         if os.path.exists(bot.config.si.pathongoing + trigger.group(2) + "\\Players.txt"):
             tempfile = open(bot.config.si.pathongoing + trigger.group(2) + "\\Players.txt")
             for line in tempfile:
-                sline = line.split(":")
-                if sline[0] is "Player":
-                    players[sline[1]+ ".trn"] = False
-                    print sline[1]+ ".trn"
+                line = line.strip().split(":")
+                if line[0] == "Player":
+                    players[line[1]] = False
+                else:
+                    host = line[1]
         for file in os.listdir(bot.config.si.pathongoing + trigger.group(2)):
             if file.endswith(".trn"):
                 bot.say(file)
@@ -41,16 +45,17 @@ def check(bot, trigger):
                 if turnFiles[turn] <= mainSave:
                     ready = False
                 else:
-                    players[turn] = True
+                    players[turn.strip(".trn")] = True
             for p in players:
-                if players[p] is not True:
+                if players[p] is False:
                     allPresent = False
             if ready and allPresent:
                 bot.say("All turns present and newer than main save file.")
             else:
                 bot.say("Turns not present or older than main save file:")
                 for p in players:
-                    bot.say(p)
+                    if players[p] is False:
+                        bot.say(p)
         else:
             bot.say("No turn files present.")
             bot.say("Waiting for:")
