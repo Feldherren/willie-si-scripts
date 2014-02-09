@@ -35,10 +35,10 @@ def check(bot, trigger):
                     host = line[1]
         for file in os.listdir(bot.config.si.pathongoing + trigger.group(2)):
             if file.endswith(".trn"):
-                bot.say(file)
+                #bot.say(file)
                 turnFiles[file] = os.stat(bot.config.si.pathongoing + trigger.group(2) + "\\" + file).st_mtime
             elif file.endswith(".sav"):
-                bot.say(file)
+                #bot.say(file)
                 mainSave = os.stat(bot.config.si.pathongoing + trigger.group(2) + "\\" + file).st_mtime
         if len(turnFiles) > 0:
             for turn in turnFiles:
@@ -51,6 +51,7 @@ def check(bot, trigger):
                     allPresent = False
             if ready and allPresent:
                 bot.say("All turns present and newer than main save file.")
+                bot.say(host + " can process the turn file now!")
             else:
                 bot.say("Turns not present or older than main save file:")
                 for p in players:
