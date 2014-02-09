@@ -19,7 +19,16 @@ def check(bot, trigger):
     if os.path.isdir(bot.config.si.pathongoing + trigger.group(2)):
         mainSave = ""
         turnFiles = {}
+        allPresent = True
         ready = True
+        players = {}
+        if os.path.exists(bot.config.si.pathongoing + trigger.group(2) + "\\Players.txt"):
+            tempfile = open(bot.config.si.pathongoing + trigger.group(2) + "\\Players.txt")
+            for line in tempfile:
+                sline = line.split(":")
+                if sline[0] is "Player":
+                    players[sline[1]+ ".trn"] = False
+                    print sline[1]+ ".trn"
         for file in os.listdir(bot.config.si.pathongoing + trigger.group(2)):
             if file.endswith(".trn"):
                 bot.say(file)
@@ -31,12 +40,22 @@ def check(bot, trigger):
             for turn in turnFiles:
                 if turnFiles[turn] <= mainSave:
                     ready = False
-            if ready:
-                bot.say("All turns present newer than main save file.")
+                else:
+                    players[turn] = True
+            for p in players:
+                if players[p] is not True:
+                    allPresent = False
+            if ready and allPresent:
+                bot.say("All turns present and newer than main save file.")
             else:
-                bot.say("Some or all turns present older than main save file.")
+                bot.say("Turns not present or older than main save file:")
+                for p in players:
+                    bot.say(p)
         else:
             bot.say("No turn files present.")
+            bot.say("Waiting for:")
+            for p in players:
+                bot.say(p)
     else:
         bot.say("I can't find the ongoing game '" + trigger.group(2) + "'")
 
@@ -50,7 +69,6 @@ def finished(bot, trigger):
     for dir in os.walk(bot.config.si.pathfinished).next()[1]:
         bot.say(dir)
 
-@willie.module.commands('debug')
-def debug(bot, trigger):
-    bot.say("Ongoing games location:" + bot.config.si.pathongoing)
-    bot.say("Finished games location:" + bot.config.si.pathfinished)
+@willie.module.commands('monitor')
+def monitor(bot, trigger):
+    bot.say("Monitoring function not yet implemented.")
