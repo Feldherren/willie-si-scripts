@@ -75,6 +75,15 @@ def finished(bot, trigger):
     for dir in os.walk(bot.config.si.pathfinished).next()[1]:
         bot.say(dir)
 
+monitored = []
+        
 @willie.module.commands('monitor')
 def monitor(bot, trigger):
     bot.say("Monitoring function not yet implemented.")
+    # if game is first game monitored, create job
+    monitored.append(trigger.group(2))
+
+@willie.module.commands('unmonitor')
+def unmonitor(bot, trigger):
+    bot.say("Monitoring function not yet implemented.")
+    # if game is last game monitored, remove job
