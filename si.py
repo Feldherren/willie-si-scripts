@@ -103,4 +103,9 @@ def unmonitor(bot, trigger):
 
 def monitoring():
     for game in monitored:
-        files = {}
+        # compare time-modified of files in dict with time-modified of files in game folder
+        for file in os.listdir(bot.config.si.pathongoing + game):
+            if file in monitored[game]:
+                if os.stat(bot.config.si.pathongoing + game + "\\" + file).st_mtime > monitored[game][file]:
+                    bot.say(file + " updated!")
+            monitored[game][file] = os.stat(bot.config.si.pathongoing + game + "\\" + file).st_mtime
