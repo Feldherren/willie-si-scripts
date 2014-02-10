@@ -93,7 +93,7 @@ def monitor(bot, trigger):
         if trigger.group(2) in monitored:
             bot.say(trigger.group(2) + " is already being monitored.")
         else:
-            monitored[trigger.group(2)] = False
+            monitored[trigger.group(2)] = {}
             bot.say(trigger.group(2) + " added to monitored games.")
     else:
         bot.say("I can't find the ongoing game " + trigger.group(2))
@@ -112,11 +112,12 @@ def unmonitor(bot, trigger):
 @willie.module.interval(5)
 def monitoring(bot):
     # monitorjob.next()
-    print "Running monitoring"
+    # print "Running monitoring"
     for game in monitored:
         # compare time-modified of files in dict with time-modified of files in game folder
         for file in os.listdir(bot.config.si.pathongoing + game):
             if file in monitored[game]:
                 if os.stat(bot.config.si.pathongoing + game + "\\" + file).st_mtime > monitored[game][file]:
-                    bot.say(file + " updated!")
+                    for channel in bot.channels:
+                        bot.msg(channel, game + ": " + file + " updated!")
             monitored[game][file] = os.stat(bot.config.si.pathongoing + game + "\\" + file).st_mtime
