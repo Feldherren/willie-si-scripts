@@ -75,15 +75,32 @@ def finished(bot, trigger):
     for dir in os.walk(bot.config.si.pathfinished).next()[1]:
         bot.say(dir)
 
-monitored = []
+monitored = {}
+# dict of dicts for keeping file modified times
+# dict contains game-name linked to dict of files + time modified
         
 @willie.module.commands('monitor')
 def monitor(bot, trigger):
-    bot.say("Monitoring function not yet implemented.")
+    # if game exists and is not being monitored, add to list of monitored games
+    if os.path.isdir(bot.config.si.pathongoing + trigger.group(2)):
+        if trigger.group(2) in monitored:
+            bot.say(trigger.group(2) + " is already being monitored.")
+        else:
+            monitored[trigger.group(2)] = False
+            bot.say(trigger.group(2) + " added to monitored games.")
+    else:
+        bot.say("I can't find the ongoing game " + trigger.group(2))
     # if game is first game monitored, create job
-    monitored.append(trigger.group(2))
 
 @willie.module.commands('unmonitor')
 def unmonitor(bot, trigger):
-    bot.say("Monitoring function not yet implemented.")
     # if game is last game monitored, remove job
+    if trigger.group(2) in monitored:
+        del monitored[trigger.group(2)]
+        bot.say(trigger.group(2) + " removed from monitored games.")
+    else:
+        bot.say(trigger.group(2) + " is not being monitored.")
+
+def monitoring():
+    for game in monitored:
+        files = {}
