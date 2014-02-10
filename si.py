@@ -1,8 +1,9 @@
 import willie
 import os
+import willie.module
 
-scheduler = None
-monitorjob = None
+# scheduler = None
+# monitorjob = None
 
 def configure(config):
     config.interactive_add("si", "pathOngoing", "Location of ongoing game folders?")
@@ -16,9 +17,9 @@ def setup(bot):
         bot.config.si.pathongoing = bot.config.si.pathongoing + '\\'
     if not bot.config.si.pathfinished.endswith('\\'):
         bot.config.si.pathfinished = bot.config.si.pathfinished + '\\'
-    scheduler = willie.bot.Willie.JobScheduler(bot)
-    monitorjob = willie.bot.Willie.Job(30, monitoring)
-    scheduler.add_job(monitorjob)
+    # scheduler = willie.bot.Willie.JobScheduler(bot)
+    # monitorjob = willie.bot.Willie.Job(30, monitoring)
+    # scheduler.add_job(monitorjob)
 
 @willie.module.commands('check')
 def check(bot, trigger):
@@ -107,8 +108,10 @@ def unmonitor(bot, trigger):
     else:
         bot.say(trigger.group(2) + " is not being monitored.")
 
-def monitoring():
-    monitorjob.next()
+# set this to something more sensible when done testing
+@willie.module.interval(5)
+def monitoring(bot):
+    # monitorjob.next()
     print "Running monitoring"
     for game in monitored:
         # compare time-modified of files in dict with time-modified of files in game folder
