@@ -2,8 +2,8 @@ import willie
 import os
 import willie.module
 
-# scheduler = None
-# monitorjob = None
+# <almiteycow> could add a hook for if(updatedfile is .sav) { blast the turns to oblivion }
+# add config option to control the above
 
 def configure(config):
     config.interactive_add("si", "pathOngoing", "Location of ongoing game folders?")
